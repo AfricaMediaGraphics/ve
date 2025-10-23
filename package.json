@@ -1,0 +1,17 @@
+{
+  "name": "vesper_ai",
+  "version": "1.0.0",
+  "description": "VC Funded. Revenue prelude.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "gitignore": "^0.7.0"
+  }
+}
