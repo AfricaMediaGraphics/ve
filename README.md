@@ -1,2 +1,2 @@
 # ve
-VC Funded. Revenue prelude. 
+LICENSED MIT.   
