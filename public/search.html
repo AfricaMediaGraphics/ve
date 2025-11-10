@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>travelah! - Find Your Perfect Getaway</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Floating background elements */
+    .background-blur {
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .blur-1 {
+      background: linear-gradient(135deg, #c0c0c0 0%, #d3d3d3 100%);
+      top: -200px;
+      left: -200px;
+      animation-delay: 0s;
+    }
+
+    .blur-2 {
+      background: linear-gradient(135deg, #a8a8a8 0%, #bebebe 100%);
+      bottom: -200px;
+      right: -200px;
+      animation-delay: -10s;
+    }
+
+    .blur-3 {
+      background: linear-gradient(135deg, #b8b8b8 0%, #d0d0d0 100%);
+      top: 50%;
+      left: 50%;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translate(0, 0) scale(1);
+      }
+      33% {
+        transform: translate(50px, -50px) scale(1.1);
+      }
+      66% {
+        transform: translate(-50px, 50px) scale(0.9);
+      }
+    }
+
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nav-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-logo:hover {
+      transform: scale(1.05);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: #495057;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: #212529;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-button {
+      background: linear-gradient(135deg, #0186fa 0%, #ed02f9 100%);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+    }
+
+    .nav-button:active {
+      transform: translateY(0);
+    }
+
+    /* Main container */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 100px 20px 40px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3e4348 0%, #1c1f22 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      letter-spacing: -1.5px;
+    }
+
+    .tagline {
+      color: #6c757d;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    /* Search */
+    .search-container {
+      position: relative;
+      margin-bottom: 40px;
+      animation: slideUp 0.8s ease-out;
+    }
+
+    .search-wrapper {
+      position: relative;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 28px;
+      box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .search-wrapper:focus-within {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 
+        0 12px 48px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      transform: translateY(-2px) scale(1.01);
+      border-color: rgba(200, 200, 200, 0.5);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 20px 60px 20px 30px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: #212529;
+      background: transparent;
+      font-weight: 400;
+    }
+
+    .search-input::placeholder {
+      color: #adb5bd;
+    }
+
+    .search-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg, #01f615a8 0%, #7dc7da 100%);
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 16px rgba(108, 117, 125, 0.35);
+    }
+
+    .search-btn:hover {
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 8px 24px rgba(108, 117, 125, 0.5);
+    }
+
+    .search-btn:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    /* Results */
+    .results {
+      display: grid;
+      gap: 16px;
+      animation: fadeIn 1s ease-out;
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 
+        0 4px 24px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      opacity: 0;
+      animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+      transition: left 0.5s;
+    }
+
+    .result-card:hover::before {
+      left: 100%;
+    }
+
+    .result-card:nth-child(1) { animation-delay: 0.1s; }
+    .result-card:nth-child(2) { animation-delay: 0.15s; }
+    .result-card:nth-child(3) { animation-delay: 0.2s; }
+    .result-card:nth-child(4) { animation-delay: 0.25s; }
+    .result-card:nth-child(5) { animation-delay: 0.3s; }
+
+    .result-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: 
+        0 12px 40px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(255, 255, 255, 1);
+    }
+
+    .result-card:active {
+      transform: translateY(-2px) scale(0.99);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .result-image {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(108, 117, 125, 0.9) 0%, rgba(73, 80, 87, 0.9) 100%);
+      backdrop-filter: blur(10px);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 
+        0 4px 16px rgba(108, 117, 125, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .result-card:hover .result-image {
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: 0 8px 24px rgba(108, 117, 125, 0.45);
+    }
+
+    .result-info {
+      flex: 1;
+    }
+
+    .result-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #212529;
+      margin-bottom: 3px;
+      letter-spacing: -0.3px;
+    }
+
+    .result-location {
+      color: #6c757d;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .result-description {
+      color: #495057;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+
+    .result-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .result-price {
+      font-size: 1.05rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.3px;
+    }
+
+    .result-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #6c757d;
+      background: rgba(108, 117, 125, 0.1);
+      padding: 3px 10px;
+      border-radius: 10px;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 80px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-top: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
+      padding: 40px 20px 30px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .footer-section h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #212529;
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-link {
+      color: #6c757d;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .footer-link:hover {
+      color: #212529;
+      transform: translateX(4px);
+    }
+
+    .footer-bottom {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      text-align: center;
+      color: #adb5bd;
+      font-size: 0.85rem;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(108, 117, 125, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      color: #6c757d;
+    }
+
+    .social-icon:hover {
+      background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+      color: white;
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(108, 117, 125, 0.3);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Responsive */
+    @media (min-width: 768px) {
+      .header {
+        margin-bottom: 60px;
+      }
+
+      .logo {
+        font-size: 3.5rem;
+      }
+
+      .tagline {
+        font-size: 1.2rem;
+      }
+
+      .search-input {
+        padding: 24px 70px 24px 35px;
+        font-size: 1.1rem;
+      }
+
+      .search-btn {
+        width: 52px;
+        height: 52px;
+        right: 10px;
+      }
+
+      .result-card {
+        padding: 18px;
+      }
+
+      .result-image {
+        width: 70px;
+        height: 70px;
+      }
+
+      .nav-links {
+        gap: 32px;
+      }
+
+      .footer-content {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+      }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-content">
+      <div class="nav-logo">travelah</div>
+      <div class="nav-links">
+        <a href="#" class="nav-link">Explore</a>
+        <a href="#" class="nav-link">Saved</a>
+        <a href="#" class="nav-link">Trips</a>
+        <button class="nav-button">Sign In</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="background-blur blur-1"></div>
+  <div class="background-blur blur-2"></div>
+  <div class="background-blur blur-3"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="logo">travelah</h1>
+      <p class="tagline">Find your perfect getaway destination</p>
+    </div>
+
+    <div class="search-container">
+      <div class="search-wrapper">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search for destinations, hotels, experiences..."
+          id="searchInput"
+        >
+        <button class="search-btn" id="searchBtn">
+          <svg class="search-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="results" id="results">
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-image">🏝️</div>
+          <div class="result-info">
+            <h3 class="result-title">Tropical Beach Villa</h3>
+            <div class="result-location">📍 Bali, Indonesia</div>
+          </div>
+        </div>
+        <p class="result-description">
+          Luxury beachfront villa with stunning ocean views, private pool, and direct beach access. Perfect for couples and families.
+        </p>
+        <div class="result-footer">
+          <div class="result-price">$250/night</div>
+          <div class="result-rating">⭐ 4.9</div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-image">🏔️</div>
+          <div class="result-info">
+            <h3 class="result-title">Mountain Chalet Retreat</h3>
+            <div class="result-location">📍 Swiss Alps, Switzerland</div>
+          </div>
+        </div>
+        <p class="result-description">
+          Cozy alpine chalet with breathtaking mountain views, fireplace, and easy access to skiing. Ideal for winter getaways.
+        </p>
+        <div class="result-footer">
+          <div class="result-price">$320/night</div>
+          <div class="result-rating">⭐ 4.8</div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-image">🏙️</div>
+          <div class="result-info">
+            <h3 class="result-title">Downtown Luxury Suite</h3>
+            <div class="result-location">📍 New York City, USA</div>
+          </div>
+        </div>
+        <p class="result-description">
+          Modern penthouse suite in the heart of Manhattan. Walking distance to Times Square, restaurants, and entertainment.
+        </p>
+        <div class="result-footer">
+          <div class="result-price">$450/night</div>
+          <div class="result-rating">⭐ 4.7</div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-image">🌴</div>
+          <div class="result-info">
+            <h3 class="result-title">Safari Lodge Experience</h3>
+            <div class="result-location">📍 Serengeti, Tanzania</div>
+          </div>
+        </div>
+        <p class="result-description">
+          Authentic safari lodge with wildlife viewing, guided tours, and luxury amenities in the heart of the African savanna.
+        </p>
+        <div class="result-footer">
+          <div class="result-price">$380/night</div>
+          <div class="result-rating">⭐ 5.0</div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-header">
+          <div class="result-image">🏛️</div>
+          <div class="result-info">
+            <h3 class="result-title">Historic Villa Tuscany</h3>
+            <div class="result-location">📍 Florence, Italy</div>
+          </div>
+        </div>
+        <p class="result-description">
+          Restored 18th-century villa surrounded by vineyards and olive groves. Includes wine tasting and cooking classes.
+        </p>
+        <div class="result-footer">
+          <div class="result-price">$290/night</div>
+          <div class="result-rating">⭐ 4.9</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Company</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">About Us</a>
+          <a href="#" class="footer-link">Careers</a>
+          <a href="#" class="footer-link">Press</a>
+          <a href="#" class="footer-link">Blog</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Help Center</a>
+          <a href="#" class="footer-link">Contact Us</a>
+          <a href="#" class="footer-link">Safety</a>
+          <a href="#" class="footer-link">Cancellation</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4>Hosting</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">List Your Property</a>
+          <a href="#" class="footer-link">Host Resources</a>
+          <a href="#" class="footer-link">Community</a>
+          <a href="#" class="footer-link">Host Stories</a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h4>Legal</h4>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacy Policy</a>
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Cookie Policy</a>
+          <a href="#" class="footer-link">Sitemap</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-social">
+        <a href="#" class="social-icon">𝕏</a>
+        <a href="#" class="social-icon">📘</a>
+        <a href="#" class="social-icon">📷</a>
+        <a href="#" class="social-icon">🔗</a>
+      </div>
+      <p>© 2024 HolidayStays. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+
+    searchBtn.addEventListener('click', performSearch);
+
+    function performSearch() {
+      const query = searchInput.value.trim();
+      if (query) {
+        searchBtn.style.transform = 'translateY(-50%) scale(0.9)';
+        setTimeout(() => {
+          searchBtn.style.transform = 'translateY(-50%) scale(1)';
+        }, 150);
+        console.log('Searching for:', query);
+      }
+    }
+
+    // Enhanced card interactions
+    document.querySelectorAll('.result-card').forEach(card => {
+      card.addEventListener('mouseenter', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        card.style.setProperty('--mouse-x', x + 'px');
+        card.style.setProperty('--mouse-y', y + 'px');
+      });
+    });
+
+    // Parallax effect on scroll
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const blurs = document.querySelectorAll('.background-blur');
+      blurs.forEach((blur, index) => {
+        const speed = 0.5 + (index * 0.2);
+        blur.style.transform = `translateY(${scrolled * speed}px)`;
+      });
+    });
+  </script>
+</body>
+</html>
