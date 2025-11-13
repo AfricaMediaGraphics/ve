@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>travelah - Discover Your Next Adventure</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0066FF;
+      --text-primary: #0A0A0A;
+      --text-secondary: #6B6B6B;
+      --text-tertiary: #9B9B9B;
+      --bg: #FAFAFA;
+      --surface: #FFFFFF;
+      --border: #E8E8E8;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+      --radius-lg: 24px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .header.scrolled {
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 2.175rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.6px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1.125rem;
+    }
+
+    .btn-icon:active {
+      transform: scale(0.95);
+    }
+
+    /* Search Section */
+    .search-section {
+      padding: 24px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .search-box {
+      position: relative;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .search-box:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.08), var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 18px 56px 18px 20px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      color: var(--text-primary);
+      background: transparent;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-tertiary);
+    }
+
+    .search-button {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: var(--primary);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .search-button:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    /* Quick Filters */
+    .filters {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 16px 0 8px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .filters::-webkit-scrollbar {
+      display: none;
+    }
+
+    .filter-chip {
+      flex-shrink: 0;
+      padding: 10px 18px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-chip:active {
+      transform: scale(0.96);
+    }
+
+    .filter-chip.active {
+      background: var(--text-primary);
+      color: white;
+      border-color: var(--text-primary);
+    }
+
+    /* Results */
+    .results-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 8px 20px 40px;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .results-count {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+    }
+
+    .view-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .view-btn.active {
+      background: var(--text-primary);
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Result Card */
+    .result-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+    }
+
+    .result-card:active {
+      transform: scale(0.98);
+    }
+
+    .card-image {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.3) 100%);
+      z-index: 1;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 6px 12px;
+      border-radius: 100px;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .card-emoji {
+      font-size: 2.5rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .card-content {
+      padding: 16px;
+    }
+
+    .card-header {
+      margin-bottom: 12px;
+    }
+
+    .card-location {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .meta-dot {
+      width: 3px;
+      height: 3px;
+      background: var(--text-tertiary);
+      border-radius: 50%;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .tag {
+      padding: 5px 12px;
+      background: var(--bg);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-price {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .price-amount {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .price-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .card-rating {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: rgba(255, 193, 7, 0.12);
+      border-radius: 12px;
+    }
+
+    .rating-star {
+      font-size: 1rem;
+    }
+
+    .rating-value {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .rating-count {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    /* Tablet and up */
+    @media (min-width: 768px) {
+      .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .card-content {
+        padding: 20px;
+      }
+
+      .search-section {
+        padding: 32px 20px;
+      }
+    }
+
+    /* Desktop */
+    @media (min-width: 1024px) {
+      .results-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      }
+
+      .result-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-lg);
+        border-color: transparent;
+      }
+
+      .search-box:hover {
+        border-color: var(--text-tertiary);
+      }
+
+      .filter-chip:hover {
+        background: var(--bg);
+        border-color: var(--text-secondary);
+      }
+
+      .filter-chip.active:hover {
+        background: var(--text-primary);
+        border-color: var(--text-primary);
+      }
+
+      .btn-icon:hover {
+        background: var(--bg);
+        border-color: var(--text-secondary);
+      }
+
+      .search-button:hover {
+        background: #0052CC;
+        transform: translateY(-50%) scale(1.05);
+      }
+    }
+
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Loading state */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-content">
+      <div class="logo">travelah</div>
+      <div class="header-actions">
+        <button class="btn-icon" aria-label="Favorites">❤️</button>
+        <button class="btn-icon" aria-label="Menu">👤</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search Section -->
+  <section class="search-section">
+    <div class="search-box">
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="Where do you want to go?"
+        id="searchInput"
+        autocomplete="off"
+      >
+      <button class="search-button" id="searchBtn" aria-label="Search">
+        <svg class="search-icon" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Quick Filters -->
+    <div class="filters">
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">🏖️ Beach</button>
+      <button class="filter-chip">🏔️ Mountains</button>
+      <button class="filter-chip">🏙️ City</button>
+      <button class="filter-chip">🌴 Tropical</button>
+      <button class="filter-chip">❄️ Winter</button>
+      <button class="filter-chip">🏕️ Adventure</button>
+    </div>
+  </section>
+
+  <!-- Results Section -->
+  <section class="results-section">
+    <div class="results-header">
+      <div class="results-count">486 stays</div>
+      <div class="view-toggle">
+        <button class="view-btn active">◫</button>
+        <button class="view-btn">☰</button>
+      </div>
+    </div>
+
+    <div class="results-grid" id="resultsGrid">
+      <!-- Result Card 1 -->
+      <article class="result-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <div class="card-emoji">🏝️</div>
+          <div class="card-badge">⚡ Popular</div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-location">Bali, Indonesia</div>
+            <h3 class="card-title">Oceanview Villa Paradise</h3>
+          </div>
+          <p class="card-description">
+            Stunning beachfront villa with infinity pool, private beach access, and panoramic ocean views. Modern luxury meets tropical serenity.
+          </p>
+          <div class="card-meta">
+            <div class="meta-item">🛏️ 4 beds</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">🚿 3 baths</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">👥 8 guests</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">WiFi</span>
+            <span class="tag">Pool</span>
+            <span class="tag">Beach</span>
+            <span class="tag">Kitchen</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-amount">$385</div>
+              <div class="price-label">per night</div>
+            </div>
+            <div class="card-rating">
+              <span class="rating-star">⭐</span>
+              <span class="rating-value">4.9</span>
+              <span class="rating-count">(284)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Result Card 2 -->
+      <article class="result-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+          <div class="card-emoji">🏔️</div>
+          <div class="card-badge">🔥 Hot</div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-location">Swiss Alps, Switzerland</div>
+            <h3 class="card-title">Alpine Luxury Chalet</h3>
+          </div>
+          <p class="card-description">
+            Cozy mountain retreat with breathtaking alpine views, stone fireplace, hot tub, and ski-in ski-out access. Perfect winter escape.
+          </p>
+          <div class="card-meta">
+            <div class="meta-item">🛏️ 5 beds</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">🚿 4 baths</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">👥 10 guests</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Ski-in</span>
+            <span class="tag">Fireplace</span>
+            <span class="tag">Hot Tub</span>
+            <span class="tag">View</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-amount">$620</div>
+              <div class="price-label">per night</div>
+            </div>
+            <div class="card-rating">
+              <span class="rating-star">⭐</span>
+              <span class="rating-value">4.8</span>
+              <span class="rating-count">(197)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Result Card 3 -->
+      <article class="result-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+          <div class="card-emoji">🏙️</div>
+          <div class="card-badge">⭐ New</div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-location">New York, USA</div>
+            <h3 class="card-title">Manhattan Penthouse</h3>
+          </div>
+          <p class="card-description">
+            Sleek modern penthouse with floor-to-ceiling windows and skyline views. Steps from Times Square, Broadway, and world-class dining.
+          </p>
+          <div class="card-meta">
+            <div class="meta-item">🛏️ 3 beds</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">🚿 2 baths</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">👥 6 guests</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">City View</span>
+            <span class="tag">Doorman</span>
+            <span class="tag">Gym</span>
+            <span class="tag">Central</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-amount">$550</div>
+              <div class="price-label">per night</div>
+            </div>
+            <div class="card-rating">
+              <span class="rating-star">⭐</span>
+              <span class="rating-value">4.7</span>
+              <span class="rating-count">(412)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Result Card 4 -->
+      <article class="result-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+          <div class="card-emoji">🌴</div>
+          <div class="card-badge">💎 Luxury</div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-location">Serengeti, Tanzania</div>
+            <h3 class="card-title">Safari Lodge Adventure</h3>
+          </div>
+          <p class="card-description">
+            Exclusive safari lodge with wildlife viewing, guided tours, spa, and gourmet dining. Experience Africa's breathtaking wilderness in style.
+          </p>
+          <div class="card-meta">
+            <div class="meta-item">🛏️ 6 beds</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">🚿 5 baths</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">👥 12 guests</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Safari</span>
+            <span class="tag">Spa</span>
+            <span class="tag">Tours</span>
+            <span class="tag">Wildlife</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-amount">$890</div>
+              <div class="price-label">per night</div>
+            </div>
+            <div class="card-rating">
+              <span class="rating-star">⭐</span>
+              <span class="rating-value">5.0</span>
+              <span class="rating-count">(156)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Result Card 5 -->
+      <article class="result-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+          <div class="card-emoji">🏛️</div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-location">Florence, Italy</div>
+            <h3 class="card-title">Tuscan Villa Estate</h3>
+          </div>
+          <p class="card-description">
+            Historic 18th-century villa among vineyards and olive groves. Includes wine cellar, cooking classes, and authentic Italian experience.
+          </p>
+          <div class="card-meta">
+            <div class="meta-item">🛏️ 4 beds</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">🚿 3 baths</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">👥 8 guests</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Vineyard</span>
+            <span class="tag">Historic</span>
+            <span class="tag">Classes</span>
+            <span class="tag">Wine</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-amount">$475</div>
+              <div class="price-label">per night</div>
+            </div>
+            <div class="card-rating">
+              <span class="rating-star">⭐</span>
+              <span class="rating-value">4.9</span>
+              <span class="rating-count">(328)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Result Card 6 -->
+      <article class="result-card">
+        <div class="card-image" style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);">
+          <div class="card-emoji">🏖️</div>
+          <div class="card-badge">⚡ Popular</div>
+        </div>
+        <div class="card-content">
+          <div class="card-header">
+            <div class="card-location">Maldives</div>
+            <h3 class="card-title">Overwater Bungalow</h3>
+          </div>
+          <p class="card-description">
+            Romantic overwater villa with glass floor, direct ocean access, private deck, and stunning sunset views. Ultimate tropical luxury.
+          </p>
+          <div class="card-meta">
+            <div class="meta-item">🛏️ 1 bed</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">🚿 1 bath</div>
+            <div class="meta-dot"></div>
+            <div class="meta-item">👥 2 guests</div>
+          </div>
+          <div class="card-tags">
+            <span class="tag">Ocean</span>
+            <span class="tag">Deck</span>
+            <span class="tag">Romantic</span>
+            <span class="tag">Snorkel</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">
+              <div class="price-amount">$720</div>
+              <div class="price-label">per night</div>
+            </div>
+            <div class="card-rating">
+              <span class="rating-star">⭐</span>
+              <span class="rating-value">5.0</span>
+              <span class="rating-count">(501)</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <script>
+    // Sticky header on scroll
+    const header = document.getElementById('header');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 20) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsGrid = document.getElementById('resultsGrid');
+
+    function performSearch() {
+      const query = searchInput.value.trim();
+      if (query) {
+        resultsGrid.classList.add('loading');
+        
+        setTimeout(() => {
+          resultsGrid.classList.remove('loading');
+          resultsGrid.style.animation = 'none';
+          setTimeout(() => {
+            resultsGrid.style.animation = 'fadeInUp 0.6s ease forwards';
+          }, 10);
+        }, 300);
+      }
+    }
+
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch();
+    });
+
+    // Filter chips
+    const filterChips = document.querySelectorAll('.filter-chip');
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        filterChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        
+        resultsGrid.style.animation = 'none';
+        setTimeout(() => {
+          resultsGrid.style.animation = 'fadeInUp 0.6s ease forwards';
+        }, 10);
+      });
+    });
+
+    // Smooth parallax on scroll for cards
+    const cards = document.querySelectorAll('.result-card');
+    
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    cards.forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(30px)';
+      card.style.transition = `all 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+      observer.observe(card);
+    });
+
+    // Enhanced scroll experience - momentum scrolling
+    let isScrolling;
+    window.addEventListener('scroll', () => {
+      window.clearTimeout(isScrolling);
+      document.body.style.pointerEvents = 'none';
+      
+      isScrolling = setTimeout(() => {
+        document.body.style.pointerEvents = 'auto';
+      }, 66);
+    }, false);
+
+    // Smooth elastic scroll for filter chips
+    const filtersContainer = document.querySelector('.filters');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    filtersContainer.addEventListener('mousedown', (e) => {
+      isDown = true;
+      filtersContainer.style.cursor = 'grabbing';
+      startX = e.pageX - filtersContainer.offsetLeft;
+      scrollLeft = filtersContainer.scrollLeft;
+    });
+
+    filtersContainer.addEventListener('mouseleave', () => {
+      isDown = false;
+      filtersContainer.style.cursor = 'grab';
+    });
+
+    filtersContainer.addEventListener('mouseup', () => {
+      isDown = false;
+      filtersContainer.style.cursor = 'grab';
+    });
+
+    filtersContainer.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - filtersContainer.offsetLeft;
+      const walk = (x - startX) * 2;
+      filtersContainer.scrollLeft = scrollLeft - walk;
+    });
+
+    // Card hover tilt effect (desktop only)
+    if (window.innerWidth > 1024) {
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          
+          const rotateX = (y - centerY) / 20;
+          const rotateY = (centerX - x) / 20;
+          
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+    }
+
+    // View toggle buttons
+    const viewBtns = document.querySelectorAll('.view-btn');
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+    });
+
+    // Smooth scroll to top on logo click
+    document.querySelector('.logo').addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // Progressive image loading simulation
+    const cardImages = document.querySelectorAll('.card-image');
+    cardImages.forEach((img, index) => {
+      img.style.opacity = '0';
+      img.style.transition = `opacity 0.6s ease ${index * 0.05}s`;
+      
+      setTimeout(() => {
+        img.style.opacity = '1';
+      }, 100);
+    });
+
+    // Debounced resize handler
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        // Recalculate any dynamic elements on resize
+        console.log('Window resized');
+      }, 250);
+    });
+
+    // Add momentum to search input focus
+    searchInput.addEventListener('focus', () => {
+      searchInput.parentElement.style.transform = 'translateY(-2px) scale(1.005)';
+    });
+
+    searchInput.addEventListener('blur', () => {
+      searchInput.parentElement.style.transform = '';
+    });
+
+    // Lazy load optimization
+    if ('IntersectionObserver' in window) {
+      const lazyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('loaded');
+          }
+        });
+      });
+
+      cards.forEach(card => lazyObserver.observe(card));
+    }
+  </script>
+</body>
+</html>
