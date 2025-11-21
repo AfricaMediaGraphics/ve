@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yoh! AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f7f7f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 500;
+            letter-spacing: 2px;
+        }
+
+        .chat-area {
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            background: #f3f4f6;
+            color: #1f2937;
+            margin-left: auto;
+            text-align: right;
+            border: 1px solid #e5e7eb;
+        }
+
+        .ai-message {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #dbeafe;
+        }
+
+        .reveal-message {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            color: #991b1b;
+            border: 2px solid #ff6b6b;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
+        }
+
+        .handle {
+            font-family: monospace;
+            font-size: 1.1em;
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        button {
+            padding: 15px 30px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 500;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+            background: #ff5252;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Yoh! AI</h1>
+        <div class="chat-area" id="chatArea"></div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type something..." />
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatArea = document.getElementById('chatArea');
+        const userInput = document.getElementById('userInput');
+        let messageCount = 0;
+
+        const yohVariations = [
+            'Yoh!',
+            'YOH!',
+            'yoh...',
+            'Yoh! 😊',
+            'YOHHH!',
+            'yoh?',
+            'Yoh! 🎉',
+            'yoh yoh!',
+            'YOH! 💫',
+            'Yoh~ ✨',
+            'yoh 👀',
+            'YOH YOH YOH!'
+        ];
+
+        // Real social media accounts revealed at intervals
+        const handleReveals = {
+            4: { handle: '@wildOneX', platform: 'X/Twitter', description: 'Adventure photographer exploring wild places' },
+            8: { handle: '@internLinkedIn', platform: 'LinkedIn', description: 'Career tips from a serial intern' },
+            12: { handle: '@vintageYoutube', platform: 'YouTube', description: 'Restoring vintage tech one device at a time' },
+            16: { handle: '@cozyInstagram', platform: 'Instagram', description: 'Aesthetic cozy home vibes' },
+            20: { handle: '@techTikTok', platform: 'TikTok', description: 'Tech reviews in 60 seconds' }
+        };
+
+        function getYohResponse() {
+            messageCount++;
+            
+            // Check if this message count has a handle reveal
+            if (handleReveals[messageCount]) {
+                const reveal = handleReveals[messageCount];
+                return {
+                    isReveal: true,
+                    text: `🎉 Discovery unlocked!\n\n<span class="handle">${reveal.handle}</span>\n${reveal.platform}\n\n"${reveal.description}"\n\nCheck them out!`
+                };
+            }
+            
+            return {
+                isReveal: false,
+                text: yohVariations[Math.floor(Math.random() * yohVariations.length)]
+            };
+        }
+
+        function sendMessage() {
+            const msg = userInput.value.trim();
+            if (!msg) return;
+
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user-message';
+            userDiv.textContent = msg;
+            chatArea.appendChild(userDiv);
+
+            userInput.value = '';
+
+            setTimeout(() => {
+                const response = getYohResponse();
+                const aiDiv = document.createElement('div');
+                aiDiv.className = response.isReveal ? 'message reveal-message' : 'message ai-message';
+                aiDiv.innerHTML = response.text;
+                chatArea.appendChild(aiDiv);
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }, 300);
+
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>
